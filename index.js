@@ -5,7 +5,11 @@ const express = require("express");
 const Anthropic = require("@anthropic-ai/sdk");
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 var corsOptions = {
   origin: "https://roamresearch.com",
