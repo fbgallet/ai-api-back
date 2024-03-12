@@ -7,6 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+var corsOptions = {
+  origin: "https://roamresearch.com",
+  // optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
 // const myPathRoutes = require("./routes/myPath");
 // app.use(myMathRoutes);
 
@@ -30,7 +35,7 @@ app.post("/", (req, res) => {
   }
 });
 
-app.post("/message", async (req, res) => {
+app.post("/message", cors({ corsOptions }), async (req, res) => {
   try {
     const { key, content } = req.body;
     if (!key || !content) {
