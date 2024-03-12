@@ -37,6 +37,7 @@ app.post("/", (req, res) => {
 
 app.post("/message", cors({ corsOptions }), async (req, res) => {
   try {
+    res.header("Access-Control-Allow-Origin", "*");
     const { key, content } = req.body;
     if (!key || !content) {
       res.status(400).json({ message: "Valid API key & content are needed." });
