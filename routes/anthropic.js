@@ -34,6 +34,7 @@ router.post("/anthropic/message", async (req, res) => {
     }
     const anthropic = anthropicAPI(key);
     const message = await anthropic.messages.create({
+      max_tokens: 2048,
       system: context,
       messages: [{ role: "user", content: prompt }],
       model: model || "claude-3-haiku-20240307",
