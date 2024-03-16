@@ -27,15 +27,15 @@ router.post("/anthropic/message", async (req, res) => {
     //   "Origin, X-Requested-With, Content-Type, Accept"
     // );
     // console.log("req post:", req);
-    const { key, content, model } = req.body;
-    if (!key || !content) {
-      res.status(400).json({ message: "Valid API key & content are needed." });
+    const { key, prompt, context, model } = req.body;
+    if (!key || !prompt) {
+      res.status(400).json({ message: "Valid API key & prompt are needed." });
       return;
     }
     const anthropic = anthropicAPI(key);
     const message = await anthropic.messages.create({
-      max_tokens: 1024,
-      messages: [{ role: "user", content }],
+      system: context,
+      messages: [{ role: "user", content: prompt }],
       model: model || "claude-3-haiku-20240307",
     });
     // Anthropic models: https://docs.anthropic.com/claude/docs/models-overview#model-recommendations
