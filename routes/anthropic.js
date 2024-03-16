@@ -2,7 +2,7 @@ const Anthropic = require("@anthropic-ai/sdk");
 const express = require("express");
 const router = express.Router();
 router.use(express.json());
-router.use(cors({ origin: "roamresearch.com" }));
+router.use(cors()); // { origin: "roamresearch.com" } ?
 
 router.post("/anthropic/initialize", (req, res) => {
   try {
