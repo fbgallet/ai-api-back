@@ -54,3 +54,5 @@ function anthropicAPI(key) {
     apiKey: key,
   });
 }
+
+module.exports = router;
