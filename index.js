@@ -1,10 +1,10 @@
 require("dotenv").config();
-const cors = require("cors");
+// const cors = require("cors");
 // const axios = require("axios");
 const express = require("express");
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "roamresearch.com" }));
+// app.use(cors({ origin: "roamresearch.com" }));
 
 // const corsOptions = {
 //   origin: "roamresearch.com",
