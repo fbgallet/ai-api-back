@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const router = express.Router();
 router.use(express.json());
-router.use(cors()); // { origin: "roamresearch.com" } ?
+router.use(cors()); // { origin: "roamresearch.com" }
 
 router.post("/anthropic/initialize", (req, res) => {
   try {
@@ -11,7 +11,6 @@ router.post("/anthropic/initialize", (req, res) => {
     const anthropic = new Anthropic({
       apiKey: key,
     });
-    // console.log(anthropic);
     res.status(200).json(anthropic);
   } catch (error) {
     res.status(500).json({ message: error.response });
@@ -19,14 +18,7 @@ router.post("/anthropic/initialize", (req, res) => {
 });
 
 router.post("/anthropic/message", async (req, res) => {
-  /* cors({ corsOptions }), */
   try {
-    // res.header("Access-Control-Allow-Origin", "roamresearch.com");
-    // res.header(
-    //   "Access-Control-Allow-Headers",
-    //   "Origin, X-Requested-With, Content-Type, Accept"
-    // );
-    // console.log("req post:", req);
     const { key, prompt, context, model } = req.body;
     if (!key || !prompt) {
       res.status(400).json({ message: "Valid API key & prompt are needed." });
@@ -34,7 +26,7 @@ router.post("/anthropic/message", async (req, res) => {
     }
     const anthropic = anthropicAPI(key);
     const message = await anthropic.messages.create({
-      max_tokens: 2048,
+      max_tokens: 2048, // max is 4096 currently
       system: context,
       messages: [{ role: "user", content: prompt }],
       model: model || "claude-3-haiku-20240307",
@@ -43,7 +35,7 @@ router.post("/anthropic/message", async (req, res) => {
     // Claude 3 Opus : claude-3-opus-20240229
     // Claude 3 Sonnet	: claude-3-sonnet-20240229
     // Claude 3 Haiku :	claude-3-haiku-20240307
-    console.log(message.content);
+
     res.status(200).json({ response: message.content[0].text });
   } catch (error) {
     res.status(500).json({ message: error.response });
