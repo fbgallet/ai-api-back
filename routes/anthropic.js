@@ -26,7 +26,7 @@ router.post("/anthropic/message", async (req, res) => {
     }
     const anthropic = anthropicAPI(key);
     const message = await anthropic.messages.create({
-      max_tokens: 2048, // max is 4096 currently
+      max_tokens: 4096, // maximum for Claude 3 models
       system: context,
       messages: [{ role: "user", content: prompt }],
       model: model || "claude-3-haiku-20240307",
@@ -35,7 +35,6 @@ router.post("/anthropic/message", async (req, res) => {
     // Claude 3 Opus : claude-3-opus-20240229
     // Claude 3 Sonnet	: claude-3-sonnet-20240229
     // Claude 3 Haiku :	claude-3-haiku-20240307
-
     res.status(200).json({ response: message });
   } catch (error) {
     res.status(500).json({ message: error.response });
