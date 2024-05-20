@@ -38,12 +38,9 @@ router.post("/anthropic/message", async (req, res) => {
     res.status(200).json({ response: message });
   } catch (error) {
     console.log(error.message);
-    res
-      .status(500)
-      .json({
-        type: error.message.error.type,
-        message: error.message.error.message,
-      });
+    res.status(400).json({
+      message: error.message,
+    });
   }
 });
 
