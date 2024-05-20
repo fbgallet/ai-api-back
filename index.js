@@ -3,7 +3,7 @@ require("dotenv").config();
 // const axios = require("axios");
 const express = require("express");
 const app = express();
-app.use(express.json({ limit: "1 mb" })); // largely enought for 200 000 tokens (approx. 600 kb)
+app.use(express.json({ limit: "1000kb" })); // largely enought for 200 000 tokens (approx. 600 kb)
 // app.use(cors({ origin: "roamresearch.com" }));
 
 // const corsOptions = {
@@ -12,9 +12,9 @@ app.use(express.json({ limit: "1 mb" })); // largely enought for 200 000 tokens 
 // };
 
 const anthropicRoutes = require("./routes/anthropic");
-const ollamaRoutes = require("./routes/ollama");
+// const ollamaRoutes = require("./routes/ollama");
 app.use(anthropicRoutes);
-app.use(ollamaRoutes);
+// app.use(ollamaRoutes);
 
 // Welcome Route
 app.get("/", (req, res) => {
