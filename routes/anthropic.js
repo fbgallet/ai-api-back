@@ -37,6 +37,7 @@ router.post("/anthropic/message", async (req, res) => {
     // Claude 3 Haiku :	claude-3-haiku-20240307
     res.status(200).json({ response: message });
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ message: error.response });
   }
 });
