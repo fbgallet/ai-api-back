@@ -20,20 +20,24 @@ router.post("/anthropic/initialize", (req, res) => {
 router.post("/anthropic/message", async (req, res) => {
   try {
     const { key, prompt, context, model } = req.body;
-    if (!key || !prompt) {
+    if (!key || !prompt.length) {
       res.status(400).json({ message: "Valid API key & prompt are needed." });
       return;
     }
-    const anthropic = anthropicAPI(key);
+    const anthropic = anthropicAPI(key || process.env.ANTHROPIC_API_KEY);
     const message = await anthropic.messages.create({
       max_tokens: 4096, // maximum for Claude 3 models
       system: context,
-      messages: [{ role: "user", content: prompt }],
+      messages:
+        typeof prompt === "string"
+          ? [{ role: "user", content: prompt }]
+          : prompt,
       model: model || "claude-3-haiku-20240307",
     });
     // Anthropic models: https://docs.anthropic.com/claude/docs/models-overview#model-recommendations
     // Claude 3 Opus : claude-3-opus-20240229
     // Claude 3 Sonnet	: claude-3-sonnet-20240229
+    // Claude 3.5 Sonnet	: claude-3-5-sonnet-20240620
     // Claude 3 Haiku :	claude-3-haiku-20240307
     res.status(200).json({ response: message });
   } catch (error) {

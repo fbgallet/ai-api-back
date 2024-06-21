@@ -12,11 +12,9 @@ app.use(anthropicRoutes);
 // Welcome Route
 app.get("/", (req, res) => {
   try {
-    res
-      .status(200)
-      .json({
-        message: "Welcome on ai-api server for Live AI Assistant extension 👋",
-      });
+    res.status(200).json({
+      message: "Welcome on ai-api server for Live AI Assistant extension 👋",
+    });
   } catch (error) {
     res.status(500).json({ message: error.response });
   }
@@ -27,6 +25,6 @@ app.all("*", (req, res) => {
   res.status(404).json({ message: "This route does not exist ⛔" });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server started ✅");
 });
