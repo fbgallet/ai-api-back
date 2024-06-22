@@ -19,7 +19,7 @@ router.post("/anthropic/initialize", (req, res) => {
 
 router.post("/anthropic/message", async (req, res) => {
   try {
-    const { key, prompt, context, model } = req.body;
+    const { key, prompt, context, model, temperature } = req.body;
     if (!key || !prompt.length) {
       res.status(400).json({ message: "Valid API key & prompt are needed." });
       return;
@@ -33,6 +33,7 @@ router.post("/anthropic/message", async (req, res) => {
           ? [{ role: "user", content: prompt }]
           : prompt,
       model: model || "claude-3-haiku-20240307",
+      temperature: temperature !== null ? temperature : 1.0,
     });
     // Anthropic models: https://docs.anthropic.com/claude/docs/models-overview#model-recommendations
     // Claude 3 Opus : claude-3-opus-20240229
