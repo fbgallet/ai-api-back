@@ -20,8 +20,12 @@ router.post("/anthropic/initialize", (req, res) => {
 router.post("/anthropic/message", async (req, res) => {
   try {
     const { key, prompt, context, model, temperature } = req.body;
-    if (!key || !prompt.length) {
-      res.status(400).json({ message: "Valid API key & prompt are needed." });
+    if (!key && !process.env.ANTHROPIC_API_KEY) {
+      res.status(400).json({ message: "Valid API key needed." });
+      return;
+    }
+    if (!prompt.length) {
+      res.status(400).json({ message: "Prompt needed !" });
       return;
     }
     const anthropic = anthropicAPI(key || process.env.ANTHROPIC_API_KEY);
