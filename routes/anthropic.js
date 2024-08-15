@@ -4,7 +4,7 @@ const cors = require("cors");
 const router = express.Router();
 router.use(express.json());
 router.use(cors()); // { origin: "roamresearch.com" }
-const requestNb = 0;
+let requestNb = 0;
 
 router.post("/anthropic/initialize", (req, res) => {
   try {

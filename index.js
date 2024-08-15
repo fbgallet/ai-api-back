@@ -2,8 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 app.use(express.json({ limit: "1000kb" })); // largely enought for 200 000 tokens (approx. 600 kb)
-const cors = require("cors");
-app.use(cors());
+// const cors = require("cors");
+// app.use(cors());
 // app.use(cors({ origin: "roamresearch.com" }));
 
 const anthropicRoutes = require("./routes/anthropic");
