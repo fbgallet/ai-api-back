@@ -47,7 +47,7 @@ router.post("/anthropic/message", async (req, res) => {
     // Claude 3.5 Sonnet	: claude-3-5-sonnet-20240620
     // Claude 3 Haiku :	claude-3-haiku-20240307
     console.log(
-      `Request n°${requestNb}\nModel: ${message.model}\nTokens: in=${message.usage.input_tokens} out=${message.usage.input_tokens}`
+      `Request n°${requestNb}\nModel: ${message.model}\nTokens: in=${message.usage.input_tokens} out=${message.usage.output_tokens}`
     );
     res.status(200).json({ response: message });
   } catch (error) {
