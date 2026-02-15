@@ -38,16 +38,11 @@ router.post("/anthropic/message", async (req, res) => {
         typeof prompt === "string"
           ? [{ role: "user", content: prompt }]
           : prompt,
-      model: model || "claude-3-haiku-20240307",
+      model: model || "claude-haiku-4-5-20251001",
       temperature: temperature !== null ? temperature : 1.0,
     });
-    // Anthropic models: https://docs.anthropic.com/claude/docs/models-overview#model-recommendations
-    // Claude 3 Opus : claude-3-opus-20240229
-    // Claude 3 Sonnet	: claude-3-sonnet-20240229
-    // Claude 3.5 Sonnet	: claude-3-5-sonnet-20240620
-    // Claude 3 Haiku :	claude-3-haiku-20240307
     console.log(
-      `Request n°${requestNb}\nModel: ${message.model}\nTokens: in=${message.usage.input_tokens} out=${message.usage.output_tokens}`
+      `Request n°${requestNb}\nModel: ${message.model}\nTokens: in=${message.usage.input_tokens} out=${message.usage.output_tokens}`,
     );
     res.status(200).json({ response: message });
   } catch (error) {
@@ -55,6 +50,51 @@ router.post("/anthropic/message", async (req, res) => {
     res.status(400).json({
       message: error.message,
     });
+  }
+});
+
+// Proxy for Anthropic Files API download (bypasses CORS restriction on GET endpoints)
+router.get("/anthropic/files/:fileId/content", async (req, res) => {
+  requestNb++;
+  try {
+    const apiKey = req.headers["x-api-key"];
+    if (!apiKey && !process.env.ANTHROPIC_API_KEY) {
+      res.status(400).json({ message: "Valid API key needed." });
+      return;
+    }
+
+    const { fileId } = req.params;
+    console.log(`Request n°${requestNb} - Files API download: ${fileId}`);
+
+    const response = await fetch(
+      `https://api.anthropic.com/v1/files/${fileId}/content`,
+      {
+        method: "GET",
+        headers: {
+          "x-api-key": apiKey || process.env.ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+          "anthropic-beta": "files-api-2025-04-14",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log(`Files API error: ${response.status} - ${errorText}`);
+      res.status(response.status).json({ message: errorText });
+      return;
+    }
+
+    // Stream the binary PDF content back to the client
+    res.setHeader(
+      "Content-Type",
+      response.headers.get("content-type") || "application/pdf",
+    );
+    const buffer = await response.arrayBuffer();
+    res.send(Buffer.from(buffer));
+  } catch (error) {
+    console.log("Files API proxy error:", error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
